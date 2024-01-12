@@ -59,9 +59,11 @@ class CategoriaController extends Controller
         $categoria = Categoria::find($id);
         $categoria->nombre =      $request->input('nombre');
         $categoria->descripcion =  $request->input('descripcion');
+        $path = Storage::putFile("categorias", $request->file('imagen'));
+        $categoria->imagen =  $path;
         if ($request->hasfile('imagen')) {
-            $path = Storage::putFile("categorias", $request->file('imagen'));
-            $categoria->imagen =  $path;
+            Storage::delete($path);
+
         }
         $categoria->save();
         return "200";
