@@ -48,14 +48,23 @@ class CategoriaController extends Controller
     }
 
 
-    public function show(Categoria $categoria)
+    public function show($id)
     {
-        //
+        $data = Categoria::findOrFail($id);
+        return response()->json($data);
     }
 
-    public function edit(Categoria $categoria)
+    public function edit(Request $request, $id)
     {
-        //
+        $categoria = Categoria::find($id);
+        $categoria->nombre =      $request->input('nombre');
+        $categoria->descripcion =  $request->input('descripcion');
+        if ($request->hasfile('imagen')) {
+            $path = Storage::putFile("categorias", $request->file('imagen'));
+            $categoria->imagen =  $path;
+        }
+        $categoria->save();
+        return "200";
     }
 
 

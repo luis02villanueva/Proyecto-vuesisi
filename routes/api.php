@@ -18,5 +18,8 @@ Route::group([
     Route::post('/me', [AuthController::class, 'me'])->name('me');
 });
 
-Route::get('categorias',[CategoriaController::class, 'index']);
-Route::post('categorias',[CategoriaController::class, 'store']);
+Route::get('categoria', [CategoriaController::class, 'index']);
+Route::post('categoria', [CategoriaController::class, 'store']);
+Route::get('/categoria/{id}', [CategoriaController::class, 'show']);
+Route::post('/categoria/{id}', [CategoriaController::class, 'edit']);
+Route::delete('/categoria/{id}', [CategoriaController::class, 'destroy']);
