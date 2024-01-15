@@ -3,81 +3,85 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cliente;
+use App\Models\CursoCliente;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use PHPUnit\Framework\Constraint\Count;
 
 class ClienteController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
-        //
+        $clientes = DB::table('clientes')->get();
+        return response()->json($clientes);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function detalleClientes()
     {
-        //
+        $clientes = DB::table("curso_clientes")
+            ->select(
+                'clientes.id',
+                'nombre',
+                'dni',
+                'ciudad',
+            )
+            ->join('clientes', 'curso_clientes.clientes_id', '=', 'clientes.id')
+            ->groupBy('clientes.id', 'nombre', 'dni', 'ciudad')
+
+            ->get();
+        foreach ($clientes as $cliente) {
+            $cursos = DB::table("curso_clientes")
+                ->select(
+                    'cursos.id',
+                    'nombre'
+
+                )
+                ->join('cursos', 'curso_clientes.cursos_id', '=', 'cursos.id')
+                ->groupBy(
+                    'cursos.id',
+
+                )
+                ->where('curso_clientes.clientes_id', $cliente->id)
+                ->get();
+            $cliente->cursos = $cursos;
+        }
+        return response()->json($clientes);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
+
     public function store(Request $request)
     {
-        //
+        $clientes = new Cliente;
+        $clientes->nombre = $request->input('nombre');
+        $clientes->dni = $request->input('dni');
+        $clientes->celular = $request->input('celular');
+        $clientes->correo = $request->input('correo');
+        $clientes->ciudad = $request->input('ciudad');
+
+
+        $clientes->save();
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Cliente  $cliente
-     * @return \Illuminate\Http\Response
-     */
+
     public function show(Cliente $cliente)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Cliente  $cliente
-     * @return \Illuminate\Http\Response
-     */
+
     public function edit(Cliente $cliente)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Cliente  $cliente
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(Request $request, Cliente $cliente)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Cliente  $cliente
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Cliente $cliente)
     {
         //

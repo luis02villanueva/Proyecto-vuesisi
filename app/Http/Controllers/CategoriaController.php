@@ -15,17 +15,11 @@ class CategoriaController extends Controller
         //
 
         $categoria = DB::table('categorias')->get();
-
         return response()->json([
             "categoria" => $categoria,
         ]);
     }
 
-
-    public function create()
-    {
-        //
-    }
 
     public function store(Request $request)
     {
@@ -35,8 +29,8 @@ class CategoriaController extends Controller
         $categoria->nombre = $request->input('nombre');
         $categoria->descripcion = $request->input('descripcion');
         if ($request->hasfile('imagen')) {
-           $path = Storage::putFile("categorias", $request->file('imagen'));
-           $categoria->imagen =  $path;
+            $path = Storage::putFile("categorias", $request->file('imagen'));
+            $categoria->imagen =  $path;
         }
         $categoria->save();
         $data = [
@@ -59,25 +53,36 @@ class CategoriaController extends Controller
         $categoria = Categoria::find($id);
         $categoria->nombre =      $request->input('nombre');
         $categoria->descripcion =  $request->input('descripcion');
-        $path = Storage::putFile("categorias", $request->file('imagen'));
-        $categoria->imagen =  $path;
+
         if ($request->hasfile('imagen')) {
-            Storage::delete($path);
-
+            if (Storage::exists($categoria->imagen)) {
+                Storage::delete($categoria->imagen);
+            }
+            $path = Storage::putFile("categorias", $request->file('imagen'));
+            $categoria->imagen =  $path;
+            $categoria->save();
+            return  response()->json('La imagen se actualizo correctamente');
+        } else {
+            return 'no existe imagen';
         }
-        $categoria->save();
-        return "200";
     }
 
 
-    public function update(Request $request, Categoria $categoria)
-    {
-        //
-    }
 
-
-    public function destroy(Categoria $categoria)
+    public function destroy($id)
     {
-        //
+
+        $categoria = Categoria::find($id);
+        if (Storage::exists($categoria->imagen)) {
+
+            Storage::delete($categoria->imagen);
+        }
+        $categoria->delete();
+        $data = [
+            'message' => 'Categoria se elemino satisfactoriamente',
+            'categoria' => $categoria,
+            'status' => 200,
+        ];
+        return response()->json($data);
     }
 }
