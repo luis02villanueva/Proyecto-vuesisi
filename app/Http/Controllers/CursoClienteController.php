@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CursoCliente;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -17,32 +18,29 @@ class CursoClienteController extends Controller
 
 
         $cursos_cliente = DB::table('curso_clientes')
-            ->select('clientes.nombre as nombre del curso', 'cursos.nombre as nombre del cliente')
+            ->select('clientes.nombre as nombre del curso','dni', 'cursos.nombre as nombre del cliente')
             ->join('clientes', 'clientes.id', '=', 'curso_clientes.clientes_id')
             ->join('cursos', 'cursos.id', '=', 'curso_clientes.cursos_id')
             ->get();
         return response()->json($cursos_cliente);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function create()
     {
         //
+
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         //
+
+        $cursocliente = new CursoCliente;
+        $cursocliente->clientes_id = $request->input('cliente');
+        $cursocliente->cursos_id = $request->input('curso');
+        $cursocliente->save();
+
     }
 
     /**

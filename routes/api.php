@@ -37,10 +37,15 @@ Route::delete('/cursos/{id}', [CursoController::class, 'destroy']);
 
 
 Route::get('clientes', [ClienteController::class, 'index']);
-Route::get('cursocliente', [ClienteController::class, 'detalleClientes']);
+// Route::get('cursocliente', [ClienteController::class, 'detalleClientes']);
 Route::post('clientes', [ClienteController::class, 'store']);
 Route::get('/clientes/{id}', [ClienteController::class, 'show']);
 Route::post('/clientes/{id}', [ClienteController::class, 'edit']);
 Route::delete('/clientes/{id}', [ClienteController::class, 'destroy']);
 
 
+Route::get('cursocliente', [CursoClienteController::class, 'index']);
+Route::post('cursocliente', [CursoClienteController::class, 'store']);
+Route::get('/cursocliente/{id}', [CursoClienteController::class, 'show']);
+Route::post('/cursocliente/{id}', [CursoClienteController::class, 'edit']);
+Route::delete('/cursocliente/{id}', [CursoClienteController::class, 'destroy']);

@@ -3,10 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cliente;
-use App\Models\CursoCliente;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use PHPUnit\Framework\Constraint\Count;
 
 class ClienteController extends Controller
 {
@@ -59,18 +58,17 @@ class ClienteController extends Controller
         $clientes->celular = $request->input('celular');
         $clientes->correo = $request->input('correo');
         $clientes->ciudad = $request->input('ciudad');
-
-
         $clientes->save();
+
+        return response()->json([
+            'msg' => ' El cliente se creo correctamente',
+            'clientes' => $clientes,
+        ]);
     }
-
-
     public function show(Cliente $cliente)
     {
         //
     }
-
-
     public function edit(Cliente $cliente)
     {
         //
